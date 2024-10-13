@@ -6,6 +6,8 @@ import IconEdit from "../icons/IconEdit";
 import IconTrash from "../icons/IconTrash";
 import { createAuthor, deleteAuthor, getAllAuthor, getDetailAuthor, updateAuthor } from "../service/authorService";
 import { AlertComponents } from "../components/alert";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export function AuthorPage() {
     const [author, setAuthor] = useState([])
@@ -13,6 +15,7 @@ export function AuthorPage() {
     const [authorBio, setAuthorBio] = useState('')
     const [showAlert, setShowAlert] = useState(false)
     const [idSelected, setSelectedId] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     const deletedAuthor = (id) => {
         document.getElementById('modal_delete').showModal()
@@ -40,18 +43,22 @@ export function AuthorPage() {
 
     const submitUpdate = () => {
         const payloadBody = {
-            name : authorName,
-            bio : authorBio
+            name: authorName,
+            bio: authorBio
         }
-        updateAuthor(idSelected,payloadBody).then(() => {
+        updateAuthor(idSelected, payloadBody).then(() => {
             setShowAlert(true)
+            setLoading(true)
         })
         document.getElementById('edit_modal').close()
     }
 
     useEffect(() => {
-        getAuthor()
-    }, [])
+        setTimeout(() => {
+            getAuthor()
+            setLoading(false)
+        }, 1000)
+    }, [loading])
 
 
     const submitForm = (e) => {
@@ -61,6 +68,7 @@ export function AuthorPage() {
             bio: authorBio
         }).then((r) => {
             setShowAlert(true)
+            setLoading(true)
             setAuthorName('')
             setAuthorBio('')
         })
@@ -75,7 +83,10 @@ export function AuthorPage() {
 
     const handleDelete = () => {
         if (idSelected != null) {
-            deleteAuthor(idSelected).then(() => setShowAlert(true))
+            deleteAuthor(idSelected).then(() => {
+                setShowAlert(true)
+                setLoading(true)
+            })
             document.getElementById('modal_delete').close()
         }
     }
@@ -94,32 +105,34 @@ export function AuthorPage() {
                     <button className="btn btn-accent text-white mb-3 btn-md" onClick={() => showModal()}> <IconBook /> Tambah Author</button>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="table table-zebra">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Author</th>
-                                <th>Bio</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                author.map((d, i) => (
-                                    <tr>
-                                        <th>{i + 1}</th>
-                                        <td>{d.name}</td>
-                                        <td>{d.bio}</td>
-                                        <td>
-                                            <button className="btn btn-warning  mb-3 btn-sm" onClick={() => editAuthor(d._id)}><IconEdit /></button>
-                                            <button className="btn btn-error  mb-3 btn-sm text-white ml-3" onClick={() => deletedAuthor(d._id)}><IconTrash /></button>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
+                    {loading ? <Skeleton count={2} /> : <>
+                        <table className="table table-zebra">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Author</th>
+                                    <th>Bio</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    author.map((d, i) => (
+                                        <tr>
+                                            <th>{i + 1}</th>
+                                            <td>{d.name}</td>
+                                            <td>{d.bio}</td>
+                                            <td>
+                                                <button className="btn btn-warning  mb-3 btn-sm" onClick={() => editAuthor(d._id)}><IconEdit /></button>
+                                                <button className="btn btn-error  mb-3 btn-sm text-white ml-3" onClick={() => deletedAuthor(d._id)}><IconTrash /></button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </>}
                 </div>
             </Container>
 

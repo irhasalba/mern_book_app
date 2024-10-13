@@ -7,12 +7,15 @@ import IconTrash from "../icons/IconTrash";
 import { createAuthor, deleteAuthor, getAllAuthor, getDetailAuthor, updateAuthor } from "../service/authorService";
 import { AlertComponents } from "../components/alert";
 import { createCategory, deleteCategory, getAllCategory, getDetailCategory, updateCategory } from "../service/categoryService";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export function CategoryPage() {
     const [category, setCategory] = useState([])
     const [categoryName, setCategoryName] = useState('')
     const [showAlert, setShowAlert] = useState(false)
     const [idSelected, setSelectedId] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     const deletedAuthor = (id) => {
         document.getElementById('modal_delete').showModal()
@@ -42,13 +45,17 @@ export function CategoryPage() {
         }
         updateCategory(idSelected, payloadBody).then(() => {
             setShowAlert(true)
+            setLoading(true)
         })
         document.getElementById('edit_modal').close()
     }
 
     useEffect(() => {
-        getCategory()
-    }, [])
+        setTimeout(() => {
+            getCategory()
+            setLoading(false)
+        },1000)
+    }, [loading])
 
 
     const submitForm = (e) => {
@@ -57,6 +64,7 @@ export function CategoryPage() {
             name: categoryName,
         }).then((r) => {
             setShowAlert(true)
+            setLoading(true)
             setCategoryName('')
         })
     }
@@ -70,7 +78,10 @@ export function CategoryPage() {
 
     const handleDelete = () => {
         if (idSelected != null) {
-            deleteCategory(idSelected).then(() => setShowAlert(true))
+            deleteCategory(idSelected).then(() => {
+                setShowAlert(true)
+                setLoading(true)
+            })
             document.getElementById('modal_delete').close()
         }
     }
@@ -89,30 +100,35 @@ export function CategoryPage() {
                     <button className="btn btn-accent text-white mb-3 btn-md" onClick={() => showModal()}> <IconBook /> Tambah Category</button>
                 </div>
                 <div className="overflow-x-auto">
-                    <table className="table table-zebra">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Category</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                category.map((d, i) => (
-                                    <tr>
-                                        <th>{i + 1}</th>
-                                        <td>{d.name}</td>
-                                        <td>
-                                            <button className="btn btn-warning  mb-3 btn-sm" onClick={() => editCategory(d._id)}><IconEdit /></button>
-                                            <button className="btn btn-error  mb-3 btn-sm text-white ml-3" onClick={() => deletedAuthor(d._id)}><IconTrash /></button>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
+                    {loading ? <Skeleton count={2} /> : <>
 
-                        </tbody>
-                    </table>
+                        <table className="table table-zebra">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Category</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    category.map((d, i) => (
+                                        <tr>
+                                            <th>{i + 1}</th>
+                                            <td>{d.name}</td>
+                                            <td>
+                                                <button className="btn btn-warning  mb-3 btn-sm" onClick={() => editCategory(d._id)}><IconEdit /></button>
+                                                <button className="btn btn-error  mb-3 btn-sm text-white ml-3" onClick={() => deletedAuthor(d._id)}><IconTrash /></button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </>}
+
                 </div>
             </Container>
 
