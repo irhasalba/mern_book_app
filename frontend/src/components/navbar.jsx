@@ -84,7 +84,7 @@ export function NavbarComponent() {
                     <div className="flex gap-1">
                         <IconBxCategoryAlt className="mt-1.5" />
                         <p class="group relative">
-                            <Link className="text-lg" to="/author">category</Link>
+                            <Link className="text-lg" to="/category">Category</Link>
                             <span class="absolute -bottom-1 left-0 w-0 transition-all h-0.5 bg-indigo-600 group-hover:w-full"></span>
                         </p>
                     </div>
