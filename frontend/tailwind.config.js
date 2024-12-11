@@ -1,14 +1,10 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{jsx,js}"],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'], // Cakupan file yang harus diproses Tailwind
   theme: {
     extend: {},
   },
   daisyui : {
     themes : ["light"]
   },
-  plugins: [
-    require('daisyui')
-  ],
-}
-
+  plugins: [require('daisyui')], // Plugin DaisyUI
+};
