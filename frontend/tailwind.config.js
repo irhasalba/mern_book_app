@@ -1,8 +1,7 @@
 /*eslint-env node*/
 /** @type {import('tailwindcss').Config} */
-
-module.exports = {
-  mode : 'jit',
+import daisyui from "daisyui"
+export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'], // Cakupan file yang harus diproses Tailwind
   theme: {
     extend: {},
@@ -10,5 +9,5 @@ module.exports = {
   daisyui : {
     themes : ["light"]
   },
-  plugins: [require('daisyui')], // Plugin DaisyUI
+  plugins: [daisyui], // Plugin DaisyUI
 };
