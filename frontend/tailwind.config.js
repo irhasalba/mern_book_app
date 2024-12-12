@@ -1,6 +1,8 @@
 /*eslint-env node*/
 /** @type {import('tailwindcss').Config} */
-export default {
+
+module.exports = {
+  mode : 'jit',
   content: ['./src/**/*.{js,jsx,ts,tsx}'], // Cakupan file yang harus diproses Tailwind
   theme: {
     extend: {},
